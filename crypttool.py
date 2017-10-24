@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, string, types, hashlib, base64
+import sys, string, types, hashlib, base64, re
 
 LOWER_LETTERS = [chr(x) for x in range(97, 123)]
 UPPER_LETTERS = [chr(x) for x in range(65, 91)]
@@ -61,13 +61,13 @@ def translate(inputString, inputType, outputType):
 		result = chr(inputString)
 	return result	
 def base64prompt():
-	choice = raw_input('Would you like to [e]ncode or [d]ecode? ')
-	if (choice == 'e'):
-		inputString = raw_input("String to encode: ")
-		print(base64.b64encode(inputString))
-	else:
-		inputString = raw_input("String to decode: ")
+	b64regex = '\S*=$'
+	inputString = raw_input('Please input your string: ')
+	match = re.match(b64regex, inputString)
+	if (match):
 		print(base64.b64decode(inputString))
+	else:
+		print(base64.b64encode(inputString))
 
 
 def rotPrompt():
@@ -125,9 +125,7 @@ print("1: ROT/Ceasar Encryption")
 print("2: Hashing functions")
 print("3: Translation")
 print("4: Base64 Encoder/Decoder")
-
 choice = input("Please make a selection: ")
-
 if (choice == 1):
 	rotPrompt()
 elif (choice == 2):
