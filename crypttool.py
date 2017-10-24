@@ -21,6 +21,8 @@ def rot(inputString, amount):
 
 def translate(inputString, inputType, outputType):
 	result = ""
+	if(inputType == outputType):
+		result = inputString
 	if (inputType == 5):
 		for char in inputString:
 			if(outputType == 1):
@@ -34,25 +36,24 @@ def translate(inputString, inputType, outputType):
 			else:
 				result = inputString
 	elif (inputType == 1): #binary
-		if(outputType == 1):
+		inputString = int(inputString, 2)
+		if(outputType == 2):
 			result = inputString
-		elif(outputType == 2):
-			result = int(inputString, 2)
 		elif(outputType == 3):
-			result = oct(int(inputString, 2))
+			result = oct(inputString)
 		elif(outputType == 4):
-			result = hex(int(inputString, 2))
+			result = hex(inputString)
 		elif(outputType == 5):
-			result = char(int(inputString, 2))
+			result = chr(inputString)
 	elif (inputType == 2):
 		if(outputType == 1):
 			result = bin(inputString)
 		elif(outputType == 2):
 			result = inputString
 		elif(outputType == 3):
-			result = oct(inputString)
+			result = oct(int(inputString))
 		elif(outputType == 4):
-			result = hex(inputString)
+			result = hex(int(inputString))
 		elif(outputType == 5):
 			result = chr(int(inputString))
 	elif (inputType == 3):
@@ -77,6 +78,19 @@ def translate(inputString, inputType, outputType):
 			result = inputString;
 		elif(outputType == 5):
 			result = chr(int(inputString,16))
+	elif (inputType == 5):
+		if(outputType == 1):
+			result = bin(ord(inputString))
+		elif(outputType == 2):
+			result = ord(inputString)
+		elif(outputType == 3):
+			result = oct(ord(inputString))
+		elif(outputType == 4):
+			result = hex(ord(inputString))
+		elif(outputType == 5):
+			result = inputString
+
+
 
 	print result
 		
@@ -98,11 +112,13 @@ def translatePrompt():
 	inputType = input("Please specify input type: ")
 	outputType = input("Please specify output type: ")
 	if (inputType == 5):
-		inputString = raw_input("Please input your string: ")
+		inputString = raw_input("Please input your strings, seperated by semicolon: ")
 	else:
-		inputString = raw_input("Please input your value: ")
+		inputString = raw_input("Please input your values, seperated by semicolon: ")
 
-	translate(inputString, inputType, outputType)
+	inputList = inputString.split(";")
+	for entry in inputList:
+		translate(entry, inputType, outputType)
 
 def hashPrompt():
 	typeChoice = raw_input('Would you like to hash a file or a String? f for file, s for string: ')
