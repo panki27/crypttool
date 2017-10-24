@@ -23,6 +23,8 @@ def translate(inputString, inputType, outputType):
 	result = ""
 	if(inputType == outputType):
 		result = inputString
+		return result
+		
 	if (inputType == 5):
 		for char in inputString:
 			if(outputType == 1):
@@ -35,65 +37,30 @@ def translate(inputString, inputType, outputType):
 				result += str(hex(ord(char))) + " "
 			else:
 				result = inputString
-	elif (inputType == 1): #binary
-		inputString = int(inputString, 2)
-		if(outputType == 2):
-			result = inputString
-		elif(outputType == 3):
-			result = oct(inputString)
-		elif(outputType == 4):
-			result = hex(inputString)
-		elif(outputType == 5):
-			result = chr(inputString)
-	elif (inputType == 2):
-		if(outputType == 1):
-			result = bin(inputString)
-		elif(outputType == 2):
-			result = inputString
-		elif(outputType == 3):
-			result = oct(int(inputString))
-		elif(outputType == 4):
-			result = hex(int(inputString))
-		elif(outputType == 5):
-			result = chr(int(inputString))
-	elif (inputType == 3):
-		if(outputType == 1):
-			result = bin(int(inputString, 8))
-		elif(outputType == 2):
-			result = int(inputString, 8)
-		elif(outputType == 3):
-			result = inputString
-		elif(outputType == 4):
-			result = hex(int(inputString, 8))
-		elif(outputType == 5):
-			result = chr(int(inputString, 8))
-	elif (inputType == 4):
-		if(outputType == 1):
-			result = bin(int(inputString,16))
-		elif(outputType == 2):
-			result = int(inputString,16)
-		elif(outputType == 3):
-		 	result = oct(int(inputString,16))
-		elif(outputType == 4):
-			result = inputString;
-		elif(outputType == 5):
-			result = chr(int(inputString,16))
-	elif (inputType == 5):
-		if(outputType == 1):
-			result = bin(ord(inputString))
-		elif(outputType == 2):
-			result = ord(inputString)
-		elif(outputType == 3):
-			result = oct(ord(inputString))
-		elif(outputType == 4):
-			result = hex(ord(inputString))
-		elif(outputType == 5):
-			result = inputString
-
-
-
-	print result
+				break
+		return result
 		
+	elif(inputType == 1):
+		inputString = int(inputString, 2)
+	elif(inputType == 2):
+		inputString = int(inputString)
+	elif(inputType == 3):
+		inputString = int(inputString, 8)
+	elif(inputType == 4):
+		inputString = int(inputString, 16)
+	
+	if(outputType == 1):
+		result = bin(inputString)
+	elif(outputType == 2):
+		result = inputString
+	elif(outputType == 3):
+		result = oct(inputString)
+	elif(outputType == 4):
+		result = hex(inputString)
+	elif(outputType == 5):
+		result = chr(inputString)
+	return result	
+
 def rotPrompt():
 	choice = input("What kind of ROT do you want to perform? 1-25, or all: ")
 	userInput = raw_input("Please insert a string: ")
@@ -118,7 +85,7 @@ def translatePrompt():
 
 	inputList = inputString.split(";")
 	for entry in inputList:
-		translate(entry, inputType, outputType)
+		print(translate(entry, inputType, outputType))
 
 def hashPrompt():
 	typeChoice = raw_input('Would you like to hash a file or a String? f for file, s for string: ')
