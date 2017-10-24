@@ -61,7 +61,7 @@ def translate(inputString, inputType, outputType):
 		result = chr(inputString)
 	return result	
 def base64prompt():
-	b64regex = '\S*=$'
+	b64regex = '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
 	inputString = raw_input('Please input your string: ')
 	match = re.match(b64regex, inputString)
 	if (match):
