@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys, string, types, hashlib, base64, re
+import sys, string, types, hashlib, base64, re, urllib
 
 LOWER_LETTERS = [chr(x) for x in range(97, 123)]
 UPPER_LETTERS = [chr(x) for x in range(65, 91)]
@@ -60,11 +60,19 @@ def translate(inputString, inputType, outputType):
 	elif(outputType == 5):
 		result = chr(inputString)
 	return result	
+
+def urlEncoder():
+	input = raw_input("Pleae input your String: ")
+	print(urllib.quote_plus(input))
+
+def reverser():
+	string = raw_input('Please input your string to reverse:')
+	print(string[::-1]) 
+
 def base64prompt():
 	b64regex = '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
 	inputString = raw_input('Please input your string: ')
-	match = re.match(b64regex, inputString)
-	if (match):
+	if (re.match(b64regex, inputString)):
 		print(base64.b64decode(inputString))
 	else:
 		print(base64.b64encode(inputString))
@@ -125,6 +133,8 @@ print("1: ROT/Ceasar Encryption")
 print("2: Hashing functions")
 print("3: Translation")
 print("4: Base64 Encoder/Decoder")
+print("5: String Reverser")
+print("6: URL Encoder")
 choice = input("Please make a selection: ")
 if (choice == 1):
 	rotPrompt()
@@ -134,5 +144,10 @@ elif (choice == 3):
 	translatePrompt()
 elif(choice == 4):
 	base64prompt()
+elif(choice == 5):
+	reverser()
+elif(choice == 6):
+	urlEncoder()
+
 print("Thank you for flying with PankiCrypt Airlines!")
 
