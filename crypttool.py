@@ -7,6 +7,24 @@ LOWER_LETTERS = [chr(x) for x in range(97, 123)]
 UPPER_LETTERS = [chr(x) for x in range(65, 91)]
 COMMON_LETTERS = 'ETAOIN SHRDLU'
 
+def xorRepeating():
+    plain = raw_input('Please input your Plaintext: ')
+    key = raw_input('Key: ')
+    hexkey = list()
+    i = 0
+    for c in key:
+    	print(i)
+        hexkey.append(ord(c))
+        i += 1
+    resultString = ''
+    i = 0
+    for char in plain:
+        resultString += str(hex(ord(char) ^ hexkey[i]))[2:]
+        i += 1
+        if i == len(key):
+            i = 0
+    print(resultString)
+
 def xorBrutePrompt():
     isfile = (raw_input('f for file; for string:') == 'f')
     maxresults = input('How many top hits? ')
@@ -196,6 +214,7 @@ print('5: String Reverser')
 print('6: URL Encoder')
 print('7: Fixed XOR')
 print('8: XOR Bruteforce Single Byte ')
+print('9: XOR Repeating Key')
 choice = raw_input('Please make a selection: ')
 if (choice == '1'):
     rotPrompt()
@@ -218,5 +237,7 @@ elif(choice[0] == '7'):
 elif(choice == '8'):
     #xorSingleBrute()
     xorBrutePrompt()
+elif(choice == '9'):
+	xorRepeating()
 print('Thank you for flying with PankiCrypt Airlines!')
 
