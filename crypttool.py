@@ -7,23 +7,47 @@ LOWER_LETTERS = [chr(x) for x in range(97, 123)]
 UPPER_LETTERS = [chr(x) for x in range(65, 91)]
 COMMON_LETTERS = 'ETAOIN SHRDLU'
 
-def xorSingleBrute(encoded='', keybytes=1):
-    resultList = dict()
+def xorBrutePrompt():
+    isfile = (raw_input('f for file; for string:') == 'f')
+    maxresults = input('How many top hits? ')
+    if isfile:
+        path = raw_input('path: ')
+        path = path.strip()
+        results = list()
+        with open(path, 'r') as file:
+            contents = file.readlines()
+            contents = [line.strip() for line in contents]
+            for code in contents:
+                recursiveResult = xorSingleBrute(code, maxresults, 1)
+                #nach Punkten aufsteigend sortieren:
+                sortedList = sorted(recursiveResult.items(), key=operator.itemgetter(1))[-maxresults:]
+                #Liste in maximalwert dieser als Tupel anhaengen:
+                results.append((sortedList, max(recursiveResult.iteritems(), key=operator.itemgetter(1))[1]))
+        #sortieren nach MaxWert:
+        sortedResults = sorted(results, key=operator.itemgetter(1))
+        for item in sortedResults:
+            #da tupel muss so iteriert werden:
+            for tupel in item[::2]:
+                for i in tupel:
+                    print(i[0])
+    else:
+        encoded = raw_input('Input your Hex String: ')
+        result = xorSingleBrute(encoded, maxresults, 1)
+        sortedResults = sorted(result.items(), key=operator.itemgetter(1))[-maxresults:]
+        for i, j in sortedResults:
+            print(i)
+
+
+def xorSingleBrute(encoded='', maxresults=20, keybytes=1):
+    resultDict = dict()
     if(encoded == ''):
-        encoded = raw_input('Input your Hex String:')
+        isfile = (raw_input('f for file; for string:') == 'f')
     for xor_key in range(0, 2**(keybytes*8)):
         decoded = '';
         for i, j in zip(encoded[::2], encoded[1::2]):
             decoded += ''.join(chr(int(i+j, 16) ^ xor_key))
-        #if (all(c in string.printable for c in decoded)):
-        #if isHumanReadable(decoded):
-            #print(xor_key, decoded)
-        resultList[decoded] = commonCounter(decoded)
-    sortedResults = sorted(resultList.items(), key=operator.itemgetter(1))
-    
-    for result, key in sortedResults[-20:]:
-        #if (all(c in string.printable for c in result)):
-        print(result)    
+        resultDict[decoded] = commonCounter(decoded)
+    return resultDict
 
 def commonCounter(inputString, limit=7):
     countObj = Counter(inputString.upper())
@@ -32,17 +56,17 @@ def commonCounter(inputString, limit=7):
 
 def fixedxor(string1 = '', string2 = ''):
     if(string1 == ''):
-        string1 = raw_input("Please input your first hex string: ")
-        string2 = raw_input("Please input your second hex string: ")
+        string1 = raw_input('Please input your first hex string: ')
+        string2 = raw_input('Please input your second hex string: ')
     hex1 = int(string1, 16)
     hex2 = int(string2, 16)
     result = hex1 ^ hex2
     print(hex(result))
 
 def rot(inputString, amount):
-    outputString = "" 
+    outputString = '' 
     for char in inputString:
-        resultChar = ""
+        resultChar = ''
         if char.isupper():
             index = UPPER_LETTERS.index(char)
             resultChar = UPPER_LETTERS[(index + amount)%len(UPPER_LETTERS)]
@@ -55,7 +79,7 @@ def rot(inputString, amount):
     return outputString
 
 def translate(inputString, inputType, outputType):
-    result = ""
+    result = ''
     if(inputType == outputType):
         result = inputString
         return result
@@ -63,13 +87,13 @@ def translate(inputString, inputType, outputType):
     if (inputType == 5):
         for char in inputString:
             if(outputType == 1):
-                result += str(bin(ord(char))) + " "
+                result += str(bin(ord(char))) + ' '
             elif(outputType == 2):
-                result += str(ord(char)) + " "
+                result += str(ord(char)) + ' '
             elif(outputType == 3):
-                result += str(oct(ord(char))) + " "
+                result += str(oct(ord(char))) + ' '
             elif(outputType == 4):
-                result += str(hex(ord(char))) + " "
+                result += str(hex(ord(char))) + ' '
             else:
                 result = inputString
                 break
@@ -97,7 +121,7 @@ def translate(inputString, inputType, outputType):
     return result    
 
 def urlEncoder():
-    input = raw_input("Pleae input your String: ")
+    input = raw_input('Pleae input your String: ')
     print(urllib.quote_plus(input))
 
 def reverser():
@@ -114,8 +138,8 @@ def base64prompt():
 
 
 def rotPrompt():
-    choice = input("What kind of ROT do you want to perform? 1-25, or all: ")
-    userInput = raw_input("Please insert a string: ")
+    choice = input('What kind of ROT do you want to perform? 1-25, or all: ')
+    userInput = raw_input('Please insert a string: ')
     if type(choice) is types.IntType:
         print(rot(userInput, choice))
     else:
@@ -123,19 +147,19 @@ def rotPrompt():
             print(rot(userInput, i))
 
 def translatePrompt():
-    print("1: Binary")
-    print("2: Decimal")
-    print("3: Octal")
-    print("4: Hexadecimal")
-    print("5: ASCII")
-    inputType = input("Please specify input type: ")
-    outputType = input("Please specify output type: ")
+    print('1: Binary')
+    print('2: Decimal')
+    print('3: Octal')
+    print('4: Hexadecimal')
+    print('5: ASCII')
+    inputType = input('Please specify input type: ')
+    outputType = input('Please specify output type: ')
     if (inputType == 5):
-        inputString = raw_input("Please input your strings, seperated by semicolon: ")
+        inputString = raw_input('Please input your strings, seperated by semicolon: ')
     else:
-        inputString = raw_input("Please input your values, seperated by semicolon: ")
+        inputString = raw_input('Please input your values, seperated by semicolon: ')
 
-    inputList = inputString.split(";")
+    inputList = inputString.split(';')
     for entry in inputList:
         print(translate(entry, inputType, outputType))
 
@@ -148,7 +172,7 @@ def hashPrompt():
     if algoChoice in algoList:
         hasher = hashlib.new(algoChoice)
     else:
-        print("That's no algorithm!")
+        print('That\'s no algorithm!')
         sys.exit(0)
 
     if (typeChoice == 'f'):
@@ -162,37 +186,37 @@ def hashPrompt():
         hasher.update(inputString)    
     print(hasher.hexdigest())
 
-print("Welcome aboard PankiCrypt Airlines!")
-print("How may we serve you today?")
-print("1: ROT/Ceasar Encryption")
-print("2: Hashing functions")
-print("3: Translation")
-print("4: Base64 Encoder/Decoder")
-print("5: String Reverser")
-print("6: URL Encoder")
-print("7: Fixed XOR")
-print("8: XOR Bruteforce Single Byte ")
-choice = raw_input("Please make a selection: ")
-if (choice == "1"):
+print('Welcome aboard PankiCrypt Airlines!')
+print('How may we serve you today?')
+print('1: ROT/Ceasar Encryption')
+print('2: Hashing functions')
+print('3: Translation')
+print('4: Base64 Encoder/Decoder')
+print('5: String Reverser')
+print('6: URL Encoder')
+print('7: Fixed XOR')
+print('8: XOR Bruteforce Single Byte ')
+choice = raw_input('Please make a selection: ')
+if (choice == '1'):
     rotPrompt()
-elif (choice == "2"):
+elif (choice == '2'):
     hashPrompt()
-elif (choice == "3"):
+elif (choice == '3'):
     translatePrompt()
-elif(choice == "4"):
+elif(choice == '4'):
     base64prompt()
-elif(choice == "5"):
+elif(choice == '5'):
     reverser()
-elif(choice == "6"):
+elif(choice == '6'):
     urlEncoder()
-elif(choice[0] == "7"):
+elif(choice[0] == '7'):
     if(len(choice) > 1):
-        argList = choice.split(" ")
+        argList = choice.split(' ')
         fixedxor(argList[1], argList[2])
     else:
         fixedxor()
-elif(choice == "8"):
-    xorSingleBrute()
-
-print("Thank you for flying with PankiCrypt Airlines!")
+elif(choice == '8'):
+    #xorSingleBrute()
+    xorBrutePrompt()
+print('Thank you for flying with PankiCrypt Airlines!')
 
