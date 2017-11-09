@@ -13,7 +13,7 @@ def xorRepeating():
     hexkey = list()
     i = 0
     for c in key:
-    	print(i)
+        print(i)
         hexkey.append(ord(c))
         i += 1
     resultString = ''
@@ -28,6 +28,7 @@ def xorRepeating():
 def xorBrutePrompt():
     isfile = (raw_input('f for file; for string:') == 'f')
     maxresults = input('How many top hits? ')
+    keylength = input('Maximum key length in bytes: ')
     if isfile:
         path = raw_input('path: ')
         path = path.strip()
@@ -36,7 +37,7 @@ def xorBrutePrompt():
             contents = file.readlines()
             contents = [line.strip() for line in contents]
             for code in contents:
-                recursiveResult = xorSingleBrute(code, maxresults, 1)
+                recursiveResult = xorSingleBrute(code, maxresults, keylength)
                 #nach Punkten aufsteigend sortieren:
                 sortedList = sorted(recursiveResult.items(), key=operator.itemgetter(1))[-maxresults:]
                 #Liste in maximalwert dieser als Tupel anhaengen:
@@ -50,7 +51,7 @@ def xorBrutePrompt():
                     print(i[0])
     else:
         encoded = raw_input('Input your Hex String: ')
-        result = xorSingleBrute(encoded, maxresults, 1)
+        result = xorSingleBrute(encoded, maxresults, keylength)
         sortedResults = sorted(result.items(), key=operator.itemgetter(1))[-maxresults:]
         for i, j in sortedResults:
             print(i)
@@ -136,7 +137,19 @@ def translate(inputString, inputType, outputType):
         result = hex(inputString)
     elif(outputType == 5):
         result = chr(inputString)
-    return result    
+    return result
+
+def string2bin(input):
+	return ''.join(format(ord(x), 'b').zfill(8) for x in input)
+
+def hammingDistance(string1, string2):
+    diffs = 0
+    bin1 = string2bin(string1)
+    bin2 = string2bin(string2)
+    for b1, b2 in zip(bin1, bin2):
+        if b1 != b2:
+            diffs += 1
+    return diffs
 
 def urlEncoder():
     input = raw_input('Pleae input your String: ')
@@ -148,11 +161,26 @@ def reverser():
 
 def base64prompt():
     b64regex = '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
-    inputString = raw_input('Please input your string: ')
-    if (re.match(b64regex, inputString)):
-        print(base64.b64decode(inputString))
+    isfile = (raw_input('f for file, s for string: ') == 'f')
+    if isfile:
+        path = raw_input('Path: ')
+        path = path.strip()
+        outputPath = raw_input('Output file: ')
+        with open(path, 'r') as file:
+            contents = file.read()
+            file.close()
+            #contents = [line.strip() for line in contents]
+        decoded = base64.b64decode(contents)
+        with open(outputPath, 'w') as outfile:
+            #for line in contents:
+            outfile.write(decoded)
+            outfile.close()
     else:
-        print(base64.b64encode(inputString))
+        inputString = raw_input('Please input your string: ')
+        if (re.match(b64regex, inputString)):
+            print(base64.b64decode(inputString))
+        else:
+            print(base64.b64encode(inputString))
 
 
 def rotPrompt():
@@ -238,6 +266,6 @@ elif(choice == '8'):
     #xorSingleBrute()
     xorBrutePrompt()
 elif(choice == '9'):
-	xorRepeating()
+    xorRepeating()
 print('Thank you for flying with PankiCrypt Airlines!')
 
