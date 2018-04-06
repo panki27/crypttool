@@ -106,13 +106,13 @@ def translate(inputString, inputType, outputType):
     if (inputType == 5):
         for char in inputString:
             if(outputType == 1):
-                result += str(bin(ord(char))) + ' '
+                result += bin(ord(char)) + ' '
             elif(outputType == 2):
-                result += str(ord(char)) + ' '
+                result += ord(char) + ' '
             elif(outputType == 3):
-                result += str(oct(ord(char))) + ' '
+                result += oct(ord(char)) + ' '
             elif(outputType == 4):
-                result += str(hex(ord(char))) + ' '
+                result += hex(ord(char)) + ' '
             else:
                 result = inputString
                 break
@@ -139,8 +139,52 @@ def translate(inputString, inputType, outputType):
         result = chr(inputString)
     return result
 
+def zeroWidthString(inputstring):
+    resultstring = '>'
+    binary = translate(inputstring, 5, 1)
+    binaryArray = binary.split(" ")
+    print (binaryArray)
+    for byte in binaryArray:
+        for bit in byte[2:10]:
+            if(bit == '1'):
+                resultstring+= u'\u200b' #zero-width space
+            else:
+                resultstring+= u'\u200d' #zero-width joiner
+    resultstring += '<'
+    print resultstring
+
+def resolveZeroWidthString(inputstring):
+    charfound = False
+    binarystring = ''
+    resultstring = ''
+    inputstring = inputstring.decode('unicode-escape')
+    for char in inputstring:
+        print char
+        if char == u'\u200b':
+            binarystring += '1'
+        elif char == u'\u200d':
+            binarystring += '0'
+    for byte in binarystring[::8]:
+        resultstring += translate(byte, 1, 5)
+    print resultstring
+    
+def vignere(plain, key):
+    i = 0
+    result = ''
+    plain = plain.upper()
+    key = key.upper()
+    for char in plain:
+        if char in UPPER_LETTERS:
+            result += chr( (((ord(char)) + (ord(key[i])))%26)+65)
+            i += 1
+            if (i == len(key)):
+                i = 0
+        else:
+        	result += '.'
+    return result
+
 def string2bin(input):
-	return ''.join(format(ord(x), 'b').zfill(8) for x in input)
+    return ''.join(format(ord(x), 'b').zfill(8) for x in input)
 
 def hammingDistance(string1, string2):
     diffs = 0
@@ -207,7 +251,7 @@ def translatePrompt():
 
     inputList = inputString.split(';')
     for entry in inputList:
-        print(translate(entry, inputType, outputType))
+        print(str(translate(entry, inputType, outputType)))
 
 def hashPrompt():
     typeChoice = raw_input('Would you like to hash a file or a String? f for file, s for string: ')
@@ -243,6 +287,8 @@ print('6: URL Encoder')
 print('7: Fixed XOR')
 print('8: XOR Bruteforce Single Byte ')
 print('9: XOR Repeating Key')
+print('10: Zero-Width String')
+print('11: Resolve Zero-Width Strings')
 choice = raw_input('Please make a selection: ')
 if (choice == '1'):
     rotPrompt()
@@ -267,5 +313,11 @@ elif(choice == '8'):
     xorBrutePrompt()
 elif(choice == '9'):
     xorRepeating()
+elif(choice == '10'):
+    i = raw_input('String:')
+    zeroWidthString(i)
+elif(choice == '11'): 
+    i = raw_input('String:')
+    resolveZeroWidthString(i)
 print('Thank you for flying with PankiCrypt Airlines!')
 
