@@ -3,9 +3,9 @@ This is my _little_ commandline tool which I wrote to learn Python. It performs 
 
 ## Instructions
 1. Clone this repository.
-2. ´cd cryptool´
-3. ´chmod +x crypttool.py´
-4. ´./crypttool.py´
+2. `cd cryptool`
+3. `chmod +x crypttool.py`
+4. `./crypttool.py`
 ----
 
 ## Features:
