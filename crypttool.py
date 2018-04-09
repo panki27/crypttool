@@ -157,16 +157,18 @@ def resolveZeroWidthString(inputstring):
     charfound = False
     binarystring = ''
     resultstring = ''
-    inputstring = inputstring.decode('unicode-escape')
+    #inputstring = inputstring.decode('unicode-escape')
+    inputstring = inputstring.decode('utf-8')
     for char in inputstring:
-        print char
         if char == u'\u200b':
             binarystring += '1'
         elif char == u'\u200d':
             binarystring += '0'
-    for byte in binarystring[::8]:
-        resultstring += translate(byte, 1, 5)
-    print resultstring
+    print('Binary:')
+    print binarystring
+    #for byte in binarystring[::8]:
+    #    resultstring += translate(byte, 1, 5)
+    #print resultstring
     
 def vignere(plain, key):
     i = 0
