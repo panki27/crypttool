@@ -144,9 +144,9 @@ def zeroWidthString(inputstring):
     binary = translate(inputstring, 5, 1)
     binaryArray = binary.split(" ")
     print (binaryArray)
-    for byte in binaryArray:
+    for byte in binaryArray[:-1]:
         for bit in byte[2:10]:
-            if(bit == '1'):
+	    if(bit == '1'):
                 resultstring+= u'\u200b' #zero-width space
             else:
                 resultstring+= u'\u200d' #zero-width joiner
@@ -157,7 +157,7 @@ def resolveZeroWidthString(inputstring):
     charfound = False
     binarystring = ''
     resultstring = ''
-    #inputstring = inputstring.decode('unicode-escape')
+    #inputstring = inputstring.decode('unicode-escape')g 
     inputstring = inputstring.decode('utf-8')
     for char in inputstring:
         if char == u'\u200b':
@@ -166,9 +166,10 @@ def resolveZeroWidthString(inputstring):
             binarystring += '0'
     print('Binary:')
     print binarystring
-    #for byte in binarystring[::8]:
-    #    resultstring += translate(byte, 1, 5)
-    #print resultstring
+    for byte in binarystring[::8]:
+        print byte
+        resultstring += translate(byte, 1, 5)
+    print resultstring
     
 def vignere(plain, key):
     i = 0
