@@ -106,7 +106,11 @@ def translate(inputString, inputType, outputType):
     if (inputType == 5):
         for char in inputString:
             if(outputType == 1):
-                result += bin(ord(char)) + ' '
+                byte = bin(ord(char))
+                while len(byte) < 8:
+                    byte = '0' + byte
+                result += byte + ' '
+
             elif(outputType == 2):
                 result += ord(char) + ' '
             elif(outputType == 3):
@@ -141,11 +145,11 @@ def translate(inputString, inputType, outputType):
 
 def zeroWidthString(inputstring):
     resultstring = '>'
-    binary = translate(inputstring, 5, 1)
-    binaryArray = binary.split(" ")
-    print (binaryArray)
+    #binary = translate(inputstring, 5, 1)
+    binary = string2bin(inputstring)
+    binaryArray = split_len(binary, 8)
     for byte in binaryArray:
-        for bit in byte[2:10]:
+        for bit in byte:
             if(bit == '1'):
                 resultstring+= u'\u200b' #zero-width space
             else:
@@ -157,16 +161,19 @@ def resolveZeroWidthString(inputstring):
     charfound = False
     binarystring = ''
     resultstring = ''
-    inputstring = inputstring.decode('unicode-escape')
+    inputstring = inputstring.decode('utf-8')
     for char in inputstring:
-        print char
         if char == u'\u200b':
             binarystring += '1'
         elif char == u'\u200d':
             binarystring += '0'
-    for byte in binarystring[::8]:
+    bytelist = split_len(binarystring, 8)
+    for byte in bytelist:
         resultstring += translate(byte, 1, 5)
     print resultstring
+
+def split_len(seq, length):
+    return [seq[i:i+length] for i in range(0, len(seq), length)]
     
 def vignere(plain, key):
     i = 0
@@ -320,4 +327,3 @@ elif(choice == '11'):
     i = raw_input('String:')
     resolveZeroWidthString(i)
 print('Thank you for flying with PankiCrypt Airlines!')
-
